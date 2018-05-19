@@ -25,15 +25,19 @@
         </div>
       </div>
       <div v-if="page === 1" class="page dane">
-        <div class="vehicleNr">
-          Samochód: {{vehicleNr}}
-        </div>
-        <div class="arrivalTime">
-          dane:
-          {{data}}
-        </div>
-        <div class="gateNr">
-          placeholder
+        <div class="data">
+          <table border="1">
+            <tr v-for="gate in [1,2,3,4,5]">
+              <th>Brama {{gate}}</th>
+            </tr>
+          </table>
+          <div class="dataTable">
+            <table border="1">
+              <tr v-for="gate in [1,2,3,4,5]">
+                <td v-for="vehicle in [1,2,3,4,5,7,8,6]">vehicle {{vehicle}}</td>
+              </tr>
+            </table>
+          </div>
         </div>
       </div>
       <div class="pageNr">
