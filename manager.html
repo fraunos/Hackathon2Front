@@ -10,11 +10,11 @@
     <link rel="stylesheet" href="/style.css">
   </head>
   <body>
+    <nav>
+      <a href="/"><img src="https://www.dbschenker.com/blueprint/themes/schenker/dist/00b689b8/img/db-logo.svg" alt=""></a>
+      <h1>Panel managera</h1>
+    </nav>
     <div id="app">
-      <nav>
-        <a href="/"><img src="https://www.dbschenker.com/blueprint/themes/schenker/dist/00b689b8/img/db-logo.svg" alt=""></a>
-        <h1>Panel managera</h1>
-      </nav>
       <div v-if="page === 0" class="page login">
         <div class="">
           Podaj hasło managera:
@@ -25,18 +25,22 @@
         </div>
       </div>
       <div v-if="page === 1" class="page dane">
+        <div class="controls">
+          Skala wykresu:
+          <input type="range" name="" value="" v-model="scale" min="0.1" max="2.0" step="0.01">
+        </div>
         <div class="data">
-          <table border="1">
-            <tr v-for="gate in [1,2,3,4,5]">
-              <th>Brama {{gate}}</th>
-            </tr>
-          </table>
+          <div class="gatesLabels">
+            <div class="gateLabel">Brama #</div>
+            <div class="gateLabel" v-for="gate in gates">Brama {{gate}}</div>
+          </div>
           <div class="dataTable">
-            <table border="1">
-              <tr v-for="gate in [1,2,3,4,5]">
-                <td v-for="vehicle in [1,2,3,4,5,7,8,6]">vehicle {{vehicle}}</td>
-              </tr>
-            </table>
+            <div class="timeline">
+              <div class="timeblock" :style="'min-width:' + 50*scale + 'px'" v-for="time in timeline">{{time}}:00</div>
+            </div>
+            <div class="gateData" v-for="gate in gates">
+              <div class="vehicle" :style="'left:' + 0 + 'px; min-width:' + 200*vehicle*scale + 'px'" v-for="(vehicle, index) in vehicles" title="vehicle">{{index}}</div>
+            </div>
           </div>
         </div>
       </div>
@@ -54,11 +58,21 @@ var app = new Vue({
     login: true,
     password: 1234,
     page: 0,
-    data: null
+    data: null,
+    gates: new Set(),
+    vehicles: [Math.random(), Math.random(), Math.random(), Math.random()],
+    scale: 1
   },
   watch: {
   },
   computed: {
+    timeline(){
+      let timeline = []
+      for (var i = 6; i < 20; i++) {
+        timeline.push(i)
+      }
+      return timeline
+    }
   },
   mounted () {
   },
@@ -71,13 +85,34 @@ var app = new Vue({
     },
     getData () {
       let self = this
-      axios.get(`https://httpbin.org/get?vehicle=${this.vehicleNr}`)
+      // axios.get(`http://10.217.23.54:8080/parking.json`)
+      axios.get(`http://10.217.23.36:8080/parking.json`)
         .then(function (response) {
-          self.data = JSON.stringify(response.data.args)
+          self.data = response.data
+          // console.log(self.data);
+          self.gates = self.getGates()
+          self.routes = self.getRouteEvents()
+          // console.log(self.gates);
         })
         .catch(function (error) {
           console.log(error);
         });
+    },
+    getGates () {
+      let gates = new Set()
+      for (let gateEvent of this.data) {
+        if (gateEvent.type === 'GateEvent') {
+          gates.add(gateEvent.gate)
+        }
+      }
+      console.log(Array.from(gates));
+      return Array.from(gates)
+    },
+    getRouteEvents () {
+      let routes = []
+      for (let routeEvent of this.data){
+        routes.push(routeEvent)
+      }
     }
   },
   filters: {
@@ -86,4 +121,33 @@ var app = new Vue({
 </script>
 
 <style media="screen">
+.gateLabel {
+  font-weight: bold;
+  width: 10em;
+  margin: 2vmin 0;
+}
+.gateData{
+  display: flex;
+  /* align-items: flex-start; */
+  margin: 2vmin 0;
+  /* flex-direction: row; */
+}
+.vehicle{
+  display: flex;
+  position: relative;
+  background: green;
+  box-sizing: border-box;
+  /* border: 3px solid black; */
+  border-radius: 1vmin;
+  /* font-size: 1.6vmin; */
+  /* padding: 0.2vmin 1.2vmin; */
+}
+.timeline{
+  display: flex;
+  flex-direction: row;
+  margin: 2vmin 0;
+}
+.timeblock{
+  /* font-size: 60%; */
+}
 </style>
