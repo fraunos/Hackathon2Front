@@ -17,11 +17,11 @@
       </nav>
       <div v-if="page === 0" class="page login">
         <div class="">
-          Podaj numer auta:
+          Podaj hasło managera:
         </div>
         <div class="">
-          <input type="number" name="" value="" v-model="vehicleNr">
-          <button type="button" name="button" @click="nextPage">Wybierz numer</button>
+          <input type="number" name="" value="" v-model="password">
+          <button type="button" name="button" @click="nextPage">Zaloguj</button>
         </div>
       </div>
       <div v-if="page === 1" class="page dane">
@@ -48,7 +48,7 @@ var app = new Vue({
   el: '#app',
   data: {
     login: true,
-    vehicleNr: 1234,
+    password: 1234,
     page: 0,
     data: null
   },
