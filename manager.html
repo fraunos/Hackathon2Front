@@ -41,7 +41,11 @@
               <div class="timeblock" :style="'min-width:' + 60*scale + 'px'" v-for="time in timeline">{{time}}:00</div>
             </div>
             <div class="gateData" v-for="gate in gates">
-              <div v-if="event.gate === gate" :class="['event', {loading:event.loading, unloading:event.unloading}]" :style="'left:' + 0 + 'px; min-width:' + event.duration*scale + 'px; max-width:' + event.duration*scale + 'px'" v-for="(event, index) in events" :title="JSON.stringify(event)">{{event.vehicleId}}</div>
+              <div class="wrapEvent" v-for="(event, index) in eventsFiltered(gate)">
+                <div v-if="(index-1>=0 ? event.start - eventsFiltered(gate)[index-1].end : 0)>0" class="spacing" :style="'min-width:' + (index-1>=0 ? event.start - eventsFiltered(gate)[index-1].end : 0)*scale + 'px'"></div>
+
+                <div :class="['event', {loading:event.loading, unloading:event.unloading}]" :style="'min-width:' + event.duration*scale + 'px; max-width:' + event.duration*scale + 'px'"  :title="JSON.stringify(event)">{{event.vehicleId}}</div>
+              </div>
             </div>
           </div>
         </div>
@@ -58,6 +62,7 @@ var app = new Vue({
     password: 1234,
     page: 0,
     data: null,
+    events: [],
     gates: [],
     scale: 1
   },
@@ -75,6 +80,12 @@ var app = new Vue({
   mounted () {
   },
   methods: {
+    eventsFiltered(gateNo){
+      let events = this.events.filter((item)=>{
+        return item.gate === gateNo
+      })
+      return events
+    },
     nextPage () {
       if (this.page === 0) {
         this.getData()
@@ -102,7 +113,6 @@ var app = new Vue({
           gates.add(gateEvent.gate)
         }
       }
-      console.log(Array.from(gates));
       return Array.from(gates)
     },
     getRouteEvents () {
@@ -133,15 +143,14 @@ var app = new Vue({
   /* border-radius: 1vmin; */
   /* flex-direction: row; */
 }
-.timeline{
-  display: flex;
-  flex-direction: row;
-  margin: 2vmin 0;
-}
-.timeblock{
-  /* font-size: 60%; */
-}
 .evenColour{
   background: hsl(240, 33%, 52%);
+}
+.spacing{
+  min-height: 1em;
+}
+.wrapEvent{
+  display: flex;
+  flex-direction: row;
 }
 </style>

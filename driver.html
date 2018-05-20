@@ -44,7 +44,7 @@
               <div class="timeblock" :style="'min-width:' + 60*scale + 'px'" v-for="time in timeline">{{time}}:00</div>
             </div>
             <div class="gateData">
-              <div :class="['event', {gateEvent:event.type==='GateEvent', routeEvent:event.type==='RouteEvent', unloading:event.unloading}]" :style="'left:' + 0 + 'px; min-width:' + event.duration*scale + 'px; max-width:' + event.duration*scale + 'px'" v-for="(event, index) in events" :title="JSON.stringify(event)">{{event.gate}}</div>
+              <div :class="['event', {gateEvent:event.type==='GateEvent', routeEvent:event.type==='RouteEvent', unloading:event.unloading}]" :style="'min-width:' + event.duration*scale + 'px; max-width:' + event.duration*scale + 'px'" v-for="(event, index) in events" :title="JSON.stringify(event)">{{event.gate}}</div>
             </div>
           </div>
         </div>
@@ -166,9 +166,5 @@ var app = new Vue({
 .gateData:first{
   border-radius: 1vmin;
 }
-.timeline{
-  display: flex;
-  flex-direction: row;
-  margin: 2vmin 0;
-}
+
 </style>
