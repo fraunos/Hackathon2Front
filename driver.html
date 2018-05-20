@@ -10,23 +10,23 @@
     <link rel="stylesheet" href="/style.css">
   </head>
   <body>
+    <nav>
+      <a href="/"><img src="https://www.dbschenker.com/blueprint/themes/schenker/dist/00b689b8/img/db-logo.svg" alt=""></a>
+      <h1>Panel kierowcy</h1>
+    </nav>
     <div id="app">
-      <nav>
-        <a href="/"><img src="https://www.dbschenker.com/blueprint/themes/schenker/dist/00b689b8/img/db-logo.svg" alt=""></a>
-        <h1>Panel kierowcy</h1>
-      </nav>
       <div v-if="page === 0" class="page login">
         <div class="">
-          Podaj swoje id auta:
+          Podaj numer auta:
         </div>
         <div class="">
-          <input type="number" name="" value="" v-model="vehicleNr">
+          <input type="number" name="" value="" v-model="vehicleNo">
           <button type="button" name="button" @click="nextPage">Zaloguj</button>
         </div>
       </div>
       <div v-if="page === 1" class="page dane">
-        <div class="vehicleNr">
-          Samochód: {{vehicleNr}}
+        <div style="background: white; color:black;">
+          Kierowca nr: {{vehicleNo}}
         </div>
         <div class="arrivalTime">
           dane:
@@ -48,7 +48,7 @@ var app = new Vue({
   el: '#app',
   data: {
     login: true,
-    vehicleNr: 1234,
+    vehicleNo: 1234,
     page: 0,
     data: null
   },
@@ -82,5 +82,37 @@ var app = new Vue({
 </script>
 
 <style media="screen">
+.gateLabel {
+  font-weight: bold;
+  width: 10em;
+  margin: 2vmin 0;
+}
+.gateData{
+  display: flex;
+  /* align-items: flex-start; */
+  margin: 2vmin 0;
+  /* flex-direction: row; */
+}
+.vehicle{
+  display: flex;
+  position: relative;
+  background: green;
+  box-sizing: border-box;
+  /* border: 3px solid black; */
+  border-radius: 1vmin;
+  /* font-size: 1.6vmin; */
+  /* padding: 0.2vmin 1.2vmin; */
+}
+.timeline{
+  display: flex;
+  flex-direction: row;
+  margin: 2vmin 0;
+}
 
+.gateEvent {
+  background-color: green;
+}
+.routeEvent {
+  background-color: orange;
+}
 </style>
