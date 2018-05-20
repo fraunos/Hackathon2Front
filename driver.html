@@ -31,6 +31,7 @@
         <div class="controls">
           Skala wykresu:
           <input type="range" name="" value="" v-model="scale" min="1" max="5.0" step="0.5">
+          <button type="button" name="button" @click="getData">Pobierz aktualne dane</button>
         </div>
         <div class="data">
           <div class="gatesLabels">
@@ -44,6 +45,13 @@
             <div class="gateData">
               <div :class="['event', {gateEvent:event.type==='GateEvent', routeEvent:event.type==='RouteEvent', unloading:event.unloading}]" :style="'left:' + 0 + 'px; min-width:' + event.duration*scale + 'px'" v-for="(event, index) in events" :title="JSON.stringify(event)">{{event.gate}}</div>
             </div>
+          </div>
+        </div>
+        <div class="actions">
+          <div class="reportDelay">
+            <button type="button" name="button" @click="reportDelay">Zgłoś opóźnienie</button>
+            <input type="text" name="" value="" v-model="delayAmount">
+            <input type="text" name="" value="" v-model="delayStart">
           </div>
         </div>
       </div>
@@ -62,7 +70,9 @@ var app = new Vue({
     gates: [1,2],
     routes: [1,2],
     events: [],
-    scale: 1
+    scale: 1,
+    delayAmount: 30,
+    delayStart: 60
   },
   watch: {
   },
@@ -89,15 +99,24 @@ var app = new Vue({
     },
     getData () {
       let self = this
-      // axios.get(`http://10.217.23.54:8080/parking.json`)
-      axios.get(`http://10.217.23.40:8080/parking/veh?id=${this.vehicleNo}`)
+      axios.get(`http://10.217.23.60:8080/parking/veh?id=${this.vehicleNo}`)
         .then(function (response) {
-          self.data = response.data
-          // console.log(self.data);
           self.events = response.data
+          console.log(self.events);
           // self.gates = self.getGates()
           // self.routes = self.getRouteEvents()
           // console.log(self.gates);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    },
+    reportDelay () {
+      let self = this
+      axios.post(`http://10.217.23.60:8080/parking?id=${parseInt(this.vehicleNo)}&delayDur=${this.delayAmount}&delayStart=${this.delayStart}`)
+        .then(function (response) {
+          self.events = response.data
+          console.log(response);
         })
         .catch(function (error) {
           console.log(error);

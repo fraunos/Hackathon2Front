@@ -28,11 +28,12 @@
         <div class="controls">
           Skala wykresu:
           <input type="range" name="" value="" v-model="scale" min="1" max="5.0" step="0.5">
+          <button type="button" name="button" @click="getData">Pobierz aktualne dane</button>
         </div>
         <div class="data">
           <div class="gatesLabels">
             <div class="gateLabel">Brama #</div>
-            <div class="gateLabel" v-for="gate in gates">Brama {{gate}}</div>
+            <div :class="['gateLabel', {evenColour:index%2===0}]" v-for="(gate, index) in gates">Brama {{gate}}</div>
           </div>
           <div class="dataTable">
             <div class="timeline">
@@ -81,7 +82,7 @@ var app = new Vue({
     },
     getData () {
       let self = this
-      axios.get(`http://10.217.23.40:8080/parking/allGate`)
+      axios.get(`http://10.217.23.60:8080/parking/allGate`)
         .then(function (response) {
           self.events = response.data
           // console.log(self.data);
@@ -116,6 +117,9 @@ var app = new Vue({
 </script>
 
 <style media="screen">
+.gatesLabels{
+  width: auto;
+}
 .gateLabel {
   font-weight: bold;
   width: 10em;
@@ -125,6 +129,7 @@ var app = new Vue({
   display: flex;
   /* align-items: flex-start; */
   margin: 2vmin 0;
+  /* border-radius: 1vmin; */
   /* flex-direction: row; */
 }
 .timeline{
@@ -134,5 +139,8 @@ var app = new Vue({
 }
 .timeblock{
   /* font-size: 60%; */
+}
+.evenColour{
+  background: hsl(240, 33%, 52%);
 }
 </style>
