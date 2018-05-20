@@ -47,6 +47,35 @@ nav{
   overflow-x: auto;
   width: 100%;
 }
+.timeblock{
+  /* font-size: 60%; */
+  /* -webkit-transform: rotate(-90deg); */
+  /* transform: rotate(90deg), ; */
+}
 input[type='number'] {
   -moz-appearance:textfield;
+}
+.event{
+  display: flex;
+  position: relative;
+  background: green;
+  box-sizing: border-box;
+  /* border: 3px solid black; */
+  /* font-size: 1.6vmin; */
+  /* padding: 0.2vmin 1.2vmin; */
+}
+.event:hover{
+  filter: brightness(1.4);
+}
+.gateEvent {
+  background-color: green;
+}
+.routeEvent {
+  background-color: orange;
+}
+.loading {
+  background-color: green;
+}
+.unloading{
+  background-color: HSL(0, 80%, 50%);
 }

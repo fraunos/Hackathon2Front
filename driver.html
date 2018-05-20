@@ -30,7 +30,7 @@
         </div>
         <div class="controls">
           Skala wykresu:
-          <input type="range" name="" value="" v-model="scale" min="0.1" max="2.0" step="0.01">
+          <input type="range" name="" value="" v-model="scale" min="1" max="5.0" step="0.5">
         </div>
         <div class="data">
           <div class="gatesLabels">
@@ -42,7 +42,7 @@
               <div class="timeblock" :style="'min-width:' + 50*scale + 'px'" v-for="time in timeline">{{time}}:00</div>
             </div>
             <div class="gateData">
-              <div :class="['event', {gateEvent:event.type==='GateEvent', routeEvent:event.type==='RouteEvent', unloading:event.unloading===true}]" :style="'left:' + 0 + 'px; min-width:' + event.duration*scale + 'px'" v-for="(event, index) in events" :title="event">{{event.gate}}</div>
+              <div :class="['event', {gateEvent:event.type==='GateEvent', routeEvent:event.type==='RouteEvent', unloading:event.unloading}]" :style="'left:' + 0 + 'px; min-width:' + event.duration*scale + 'px'" v-for="(event, index) in events" :title="JSON.stringify(event)">{{event.gate}}</div>
             </div>
           </div>
         </div>
@@ -56,7 +56,7 @@ var app = new Vue({
   el: '#app',
   data: {
     login: true,
-    vehicleNo: 1234,
+    vehicleNo: 10,
     page: 0,
     data: null,
     gates: [1,2],
@@ -90,7 +90,7 @@ var app = new Vue({
     getData () {
       let self = this
       // axios.get(`http://10.217.23.54:8080/parking.json`)
-      axios.get(`http://10.217.23.40:8080/parking/veh?id=1`)
+      axios.get(`http://10.217.23.40:8080/parking/veh?id=${this.vehicleNo}`)
         .then(function (response) {
           self.data = response.data
           // console.log(self.data);
@@ -138,32 +138,17 @@ var app = new Vue({
 .gateData{
   display: flex;
   /* align-items: flex-start; */
+  border-radius: 1vmin;
   margin: 2vmin 0;
   /* flex-direction: row; */
 }
-.event{
-  display: flex;
-  position: relative;
-  background: green;
-  box-sizing: border-box;
-  /* border: 3px solid black; */
+
+.gateData:first{
   border-radius: 1vmin;
-  /* font-size: 1.6vmin; */
-  /* padding: 0.2vmin 1.2vmin; */
 }
 .timeline{
   display: flex;
   flex-direction: row;
   margin: 2vmin 0;
-}
-
-.gateEvent {
-  background-color: green;
-}
-.routeEvent {
-  background-color: orange;
-}
-.unloading{
-  background-color: red;
 }
 </style>

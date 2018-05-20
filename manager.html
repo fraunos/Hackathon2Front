@@ -27,7 +27,7 @@
       <div v-if="page === 1" class="page dane">
         <div class="controls">
           Skala wykresu:
-          <input type="range" name="" value="" v-model="scale" min="0.1" max="2.0" step="0.01">
+          <input type="range" name="" value="" v-model="scale" min="1" max="5.0" step="0.5">
         </div>
         <div class="data">
           <div class="gatesLabels">
@@ -36,16 +36,13 @@
           </div>
           <div class="dataTable">
             <div class="timeline">
-              <div class="timeblock" :style="'min-width:' + 50*scale + 'px'" v-for="time in timeline">{{time}}:00</div>
+              <div class="timeblock" :style="'min-width:' + 60*scale + 'px'" v-for="time in timeline">{{time}}:00</div>
             </div>
             <div class="gateData" v-for="gate in gates">
-              <div class="vehicle" :style="'left:' + 0 + 'px; min-width:' + 200*vehicle*scale + 'px'" v-for="(vehicle, index) in vehicles" title="vehicle">{{index}}</div>
+              <div v-if="event.gate === gate" :class="['event', {loading:event.loading, unloading:event.unloading}]" :style="'left:' + 0 + 'px; min-width:' + event.duration*scale + 'px; max-width:' + event.duration*scale + 'px'" v-for="(event, index) in events" :title="JSON.stringify(event)">{{event.vehicleId}}</div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="pageNr">
-        {{page}}
       </div>
     </div>
   </body>
@@ -59,8 +56,7 @@ var app = new Vue({
     password: 1234,
     page: 0,
     data: null,
-    gates: new Set(),
-    vehicles: [Math.random(), Math.random(), Math.random(), Math.random()],
+    gates: [],
     scale: 1
   },
   watch: {
@@ -85,10 +81,9 @@ var app = new Vue({
     },
     getData () {
       let self = this
-      // axios.get(`http://10.217.23.54:8080/parking.json`)
-      axios.get(`http://10.217.23.36:8080/parking.json`)
+      axios.get(`http://10.217.23.40:8080/parking/allGate`)
         .then(function (response) {
-          self.data = response.data
+          self.events = response.data
           // console.log(self.data);
           self.gates = self.getGates()
           self.routes = self.getRouteEvents()
@@ -100,7 +95,7 @@ var app = new Vue({
     },
     getGates () {
       let gates = new Set()
-      for (let gateEvent of this.data) {
+      for (let gateEvent of this.events) {
         if (gateEvent.type === 'GateEvent') {
           gates.add(gateEvent.gate)
         }
@@ -110,7 +105,7 @@ var app = new Vue({
     },
     getRouteEvents () {
       let routes = []
-      for (let routeEvent of this.data){
+      for (let routeEvent of this.events){
         routes.push(routeEvent)
       }
     }
@@ -131,16 +126,6 @@ var app = new Vue({
   /* align-items: flex-start; */
   margin: 2vmin 0;
   /* flex-direction: row; */
-}
-.vehicle{
-  display: flex;
-  position: relative;
-  background: green;
-  box-sizing: border-box;
-  /* border: 3px solid black; */
-  border-radius: 1vmin;
-  /* font-size: 1.6vmin; */
-  /* padding: 0.2vmin 1.2vmin; */
 }
 .timeline{
   display: flex;
