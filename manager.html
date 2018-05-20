@@ -7,6 +7,7 @@
     <!-- production version, optimized for size and speed -->
     <!-- <script src="https://cdn.jsdelivr.net/npm/vue"></script> -->
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="/config.js" charset="utf-8"></script>
     <link rel="stylesheet" href="/style.css">
   </head>
   <body>
@@ -82,7 +83,7 @@ var app = new Vue({
     },
     getData () {
       let self = this
-      axios.get(`http://10.217.23.60:8080/parking/allGate`)
+      axios.get(`${config.IP}:8080/parking/allGate`)
         .then(function (response) {
           self.events = response.data
           // console.log(self.data);
